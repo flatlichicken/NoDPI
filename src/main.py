@@ -203,48 +203,6 @@ class FileBlacklistManager(IBlacklistManager):
         """Not used in file-based mode"""
 
 
-class AutoBlacklistManager(IBlacklistManager):
-    """Blacklist manager that automatically detects blocked domains"""
-
-    def __init__(
-        self,
-        config: ProxyConfig,
-    ):
-
-        self.blacklist_file = config.blacklist_file
-        self.blocked: List[str] = []
-        self.whitelist: List[str] = []
-
-    def is_blocked(self, domain: str) -> bool:
-        """Check if domain is in blacklist"""
-
-        if domain in self.blocked:
-            return True
-
-        return False
-
-    async def check_domain(self, domain: bytes) -> None:
-        """Automatically check if domain is blocked"""
-
-        if domain.decode() in self.blocked or domain in self.whitelist:
-            return
-
-        try:
-            req = Request(
-                f"https://{domain.decode()}", headers={"User-Agent": "Mozilla/5.0"}
-            )
-            context = ssl._create_unverified_context()
-
-            with urlopen(req, timeout=4, context=context):
-                self.whitelist.append(domain.decode())
-        except URLError as e:
-            reason = str(e.reason)
-            if "handshake operation timed out" in reason:
-                self.blocked.append(domain.decode())
-                with open(self.blacklist_file, "a", encoding="utf-8") as f:
-                    f.write(domain.decode() + "\n")
-
-
 class NoBlacklistManager(IBlacklistManager):
     """Blacklist manager that doesn't block anything"""
 
@@ -585,7 +543,7 @@ class ConnectionHandler(IConnectionHandler):
                 client_ip, host.decode(), method.decode())
 
             if method == b"CONNECT" and isinstance(
-                self.blacklist_manager, AutoBlacklistManager
+                self.blacklist_manager
             ):
                 await self.blacklist_manager.check_domain(host)
 
@@ -1100,8 +1058,8 @@ class ProxyServer:
   ░███░███ ░███   ██████  ░███   ░░███ ░███    ░███ ░███
   ░███░░███░███  ███░░███ ░███    ░███ ░██████████  ░███
   ░███ ░░██████ ░███ ░███ ░███    ░███ ░███░░░░░░   ░███
-  ░███  ░░█████ ░███ ░███ ░███    ███  ░███         ░███
-  █████  ░░█████░░██████  ██████████   █████        █████
+  ░███  ░░█████ ░███ ░███ ░███    ███  ░███         ░███ flatlichicken's
+  █████  ░░█████░░██████  ██████████   █████        █████ steam only fork
  ░░░░░    ░░░░░  ░░░░░░  ░░░░░░░░░░   ░░░░░        ░░░░░\033[0m
         """
         )
@@ -1128,7 +1086,7 @@ class ProxyServer:
             self.logger.info(
                 "\033[92m[INFO]:\033[97m Blacklist is disabled. All domains will be subject to unblocking."
             )
-        elif isinstance(self.blacklist_manager, AutoBlacklistManager):
+        elif isinstance(self.blacklist_manager):
             self.logger.info(
                 "\033[92m[INFO]:\033[97m Auto-blacklist is enabled")
         else:
@@ -1216,8 +1174,6 @@ class BlacklistManagerFactory:
     def create(config: ProxyConfig, logger: ILogger) -> IBlacklistManager:
         if config.no_blacklist:
             return NoBlacklistManager()
-        if config.auto_blacklist:
-            return AutoBlacklistManager(config)
 
         try:
             return FileBlacklistManager(config)
