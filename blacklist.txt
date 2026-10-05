@@ -1,21 +1,13 @@
 # Short blacklist
-# Only for YouTube
+# Only for Steam
 
-youtube.com
-youtu.be
-yt.be
-googlevideo.com
-ytimg.com
-yting.com
-ggpht.com
-gvt1.com
-youtube-nocookie.com
-youtube-ui.l.google.com
-youtubeembeddedplayer.googleapis.com
-youtube.googleapis.com
-youtubei.googleapis.com
-jnn-pa.googleapis.com
-yt-video-upload.l.google.com
-wide-youtube.l.google.com
-yt3.googleusercontent.com
-youtubekids.com
+steampowered.com
+steamcommunity.com
+steamgames.com
+steamcontent.com
+steamusercontent.com
+steamstatic.com
+akamaihd.net
+api.steampowered.com
+cm.steampowered.com
+chat.steamcommunity.com
