@@ -217,10 +217,7 @@ class AutoBlacklistManager(IBlacklistManager):
 
     def is_blocked(self, domain: str) -> bool:
         """Check if domain is in blacklist"""
-
-        if domain in self.blocked:
-            return True
-
+        
         return False
 
     async def check_domain(self, domain: bytes) -> None:
