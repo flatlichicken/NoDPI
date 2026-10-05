@@ -217,7 +217,7 @@ class AutoBlacklistManager(IBlacklistManager):
 
     def is_blocked(self, domain: str) -> bool:
         """Check if domain is in blacklist"""
-        
+
         return False
 
     async def check_domain(self, domain: bytes) -> None:
@@ -1097,8 +1097,8 @@ class ProxyServer:
   ░███░███ ░███   ██████  ░███   ░░███ ░███    ░███ ░███
   ░███░░███░███  ███░░███ ░███    ░███ ░██████████  ░███
   ░███ ░░██████ ░███ ░███ ░███    ░███ ░███░░░░░░   ░███
-  ░███  ░░█████ ░███ ░███ ░███    ███  ░███         ░███
-  █████  ░░█████░░██████  ██████████   █████        █████
+  ░███  ░░█████ ░███ ░███ ░███    ███  ░███         ░███ flatlichicken's
+  █████  ░░█████░░██████  ██████████   █████        █████ steam only fork
  ░░░░░    ░░░░░  ░░░░░░  ░░░░░░░░░░   ░░░░░        ░░░░░\033[0m
         """
         )
